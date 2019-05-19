@@ -49,14 +49,17 @@ func (server *Server) Start() {
 			fmt.Println("accept ")
 		}
 		go func() {
-			buf := make([]byte, 1024)
-			lens, err := conn.Read(buf)
-			if err != nil {
-				fmt.Println("read from conn err:", err)
-			}
-			fmt.Printf("recv data:%s\n", string(buf[:lens]))
-			if _, err := conn.Write(buf[:lens]); err != nil {
-				fmt.Println("conn Write err: ", err)
+			for {
+				buf := make([]byte, 1024)
+				lens, err := conn.Read(buf)
+				if err != nil {
+					fmt.Println("read from conn err:", err)
+				}
+				fmt.Printf("server recv data:%s\n", string(buf[:lens]))
+				if _, err := conn.Write(buf[:lens]); err != nil {
+					fmt.Println("conn Write err: ", err)
+				}
+				fmt.Println("server write hello world ")
 			}
 		}()
 	}

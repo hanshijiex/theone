@@ -24,12 +24,13 @@ func ClientTest() {
 		if err != nil {
 			fmt.Println("write err: ", err)
 		}
+		fmt.Println("client write hello world ")
 		buf := make([]byte, 1024)
 		lens, err := conn.Read(buf)
 		if err != nil {
-			fmt.Print("read buf err:", err)
+			fmt.Println("read buf err:", err)
 		}
-		fmt.Println("recv data: ", string(buf[:lens]))
+		fmt.Println("client recv data: ", string(buf[:lens]))
 		time.Sleep(1*time.Second)
 	}
 
