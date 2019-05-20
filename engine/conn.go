@@ -12,5 +12,5 @@ type Conn struct {
 	// 状态
 	Status int8
 	// 原始连接
-	OriginalConn net.TCPConn
+	OriginalConn *net.TCPConn
 }

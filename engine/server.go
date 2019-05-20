@@ -19,7 +19,7 @@ type Server struct {
 }
 
 func NewServer() *Server {
-	s := &Server{
+	s := &Server {
 		Name:      "Serve",
 		IpVersion: "tcp4",
 		Ip:        "127.0.0.1",
@@ -44,10 +44,17 @@ func (server *Server) Start() {
 	server.Status = 0
 	fmt.Printf("[TheOne Server Started ip:%s port:%d]\n", server.Ip, server.Port)
 	for {
-		conn, err := listener.AcceptTCP()
+		originalConn, err := listener.AcceptTCP()
 		if err != nil {
 			fmt.Println("accept ")
 		}
+
+		conn = &Conn {
+			OriginalConn: originalConn,
+		}
+		
+
+
 		go func() {
 			for {
 				buf := make([]byte, 1024)
