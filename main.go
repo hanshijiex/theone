@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"theone/server"
+	"theone/engine"
 )
 
 func main() {
 	fmt.Println("hello world")
-	s := server.NewServer()
+	s := engine.NewServer()
 	s.Serve()
 }

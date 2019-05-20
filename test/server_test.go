@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"net"
 	"testing"
-	"theone/server"
+	"theone/engine"
 	"time"
 )
 
 func TestServer(t *testing.T) {
 	go ClientTest()
-	s := server.NewServer()
+	s := engine.NewServer()
 	s.Serve()
 }
 

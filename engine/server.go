@@ -1,4 +1,4 @@
-package server
+package engine
 
 import (
 	"fmt"
@@ -53,13 +53,13 @@ func (server *Server) Start() {
 				buf := make([]byte, 1024)
 				lens, err := conn.Read(buf)
 				if err != nil {
-					fmt.Println("read from conn err:", err)
+					fmt.Println("read from conn err: ", err)
 				}
-				fmt.Printf("server recv data:%s\n", string(buf[:lens]))
+				fmt.Printf("engine recv data:%s\n", string(buf[:lens]))
 				if _, err := conn.Write(buf[:lens]); err != nil {
 					fmt.Println("conn Write err: ", err)
 				}
-				fmt.Println("server write hello world ")
+				fmt.Println("engine write hello world ")
 			}
 		}()
 	}
