@@ -1,11 +1,5 @@
 package engine
 
-import "fmt"
-
-type controller struct {
-
-}
-
-func (c *controller) run() {
-	fmt.Println("controller run")
+type IController interface {
+	Run(req *Request, res *Response) error
 }

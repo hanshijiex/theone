@@ -17,7 +17,7 @@ type Server struct {
 	// 状态 关闭-1 运行0
 	Status int8
 	// 控制器
-	Controllers []*controller
+	Controller IController
 }
 
 func NewServer() *Server {
@@ -53,24 +53,32 @@ func (server *Server) Start() {
 
 		conn := &Conn {
 			OriginalConn: originalConn,
-			Request: &request {
+			Request: &Request {
 				readBuf: make([]byte, 1024),
 				readLen: 0,
+			},
+			Response: &Response {
+				writeBuf: make([]byte, 1024),
+				writeLen: 0,
 			},
 		}
 
 		go func() {
 			for {
-				buf := make([]byte, 1024)
 				err := conn.Request.ReadFrom(conn.OriginalConn)
 				if err != nil {
 					fmt.Println("read from conn err: ", err)
 				}
-				fmt.Printf("engine recv data:%s\n", string(buf[:lens]))
-				if _, err := conn.OriginalConn.Write(buf[:lens]); err != nil {
-					fmt.Println("conn Write err: ", err)
+
+				err = server.Controller.Run(conn.Request, conn.Response)
+				if err != nil {
+					fmt.Println("call controller run err: ", err)
 				}
-				fmt.Println("engine write hello world ")
+
+				err = conn.Response.WriteTo(conn.OriginalConn)
+				if err != nil {
+					fmt.Println("write to conn err: ", err)
+				}
 			}
 		}()
 	}
@@ -84,4 +92,8 @@ func (server *Server) Stop() {
 func (server *Server) Serve() {
 	server.Start()
 	select {}
+}
+
+func (server *Server) SetController(controller IController) {
+	server.Controller = controller
 }

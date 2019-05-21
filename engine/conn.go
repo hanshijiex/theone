@@ -4,11 +4,9 @@ import "net"
 
 type Conn struct {
 	// 请求
-	Request *request
+	Request *Request
 	// 响应
-	Response *response
-	// 控制器
-	Controller *controller
+	Response *Response
 	// 状态
 	Status int8
 	// 原始连接
