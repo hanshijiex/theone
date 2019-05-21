@@ -16,6 +16,8 @@ type Server struct {
 	Port uint16
 	// 状态 关闭-1 运行0
 	Status int8
+	// 控制器
+	Controllers []*controller
 }
 
 func NewServer() *Server {
@@ -49,21 +51,23 @@ func (server *Server) Start() {
 			fmt.Println("accept ")
 		}
 
-		conn = &Conn {
+		conn := &Conn {
 			OriginalConn: originalConn,
+			Request: &request {
+				readBuf: make([]byte, 1024),
+				readLen: 0,
+			},
 		}
-		
-
 
 		go func() {
 			for {
 				buf := make([]byte, 1024)
-				lens, err := conn.Read(buf)
+				err := conn.Request.ReadFrom(conn.OriginalConn)
 				if err != nil {
 					fmt.Println("read from conn err: ", err)
 				}
 				fmt.Printf("engine recv data:%s\n", string(buf[:lens]))
-				if _, err := conn.Write(buf[:lens]); err != nil {
+				if _, err := conn.OriginalConn.Write(buf[:lens]); err != nil {
 					fmt.Println("conn Write err: ", err)
 				}
 				fmt.Println("engine write hello world ")
