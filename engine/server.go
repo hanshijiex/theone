@@ -2,6 +2,7 @@ package engine
 
 import (
 	"fmt"
+	"io"
 	"net"
 )
 
@@ -61,13 +62,17 @@ func (server *Server) Start() {
 				writeBuf: make([]byte, 1024),
 				writeLen: 0,
 			},
+			Status: 1,
 		}
 
 		go func() {
 			for {
 				err := conn.Request.ReadFrom(conn.OriginalConn)
-				if err != nil {
-					fmt.Println("read from conn err: ", err)
+				if err == io.EOF {
+					fmt.Println("conn is closed")
+					conn.OriginalConn.Close()
+					conn.Status = 0
+					break
 				}
 
 				err = server.Controller.Run(conn.Request, conn.Response)
@@ -75,9 +80,8 @@ func (server *Server) Start() {
 					fmt.Println("call controller run err: ", err)
 				}
 
-				err = conn.Response.WriteTo(conn.OriginalConn)
-				if err != nil {
-					fmt.Println("write to conn err: ", err)
+				if conn.isActive() {
+					err = conn.Response.WriteTo(conn.OriginalConn)
 				}
 			}
 		}()
