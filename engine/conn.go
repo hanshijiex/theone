@@ -13,6 +13,6 @@ type Conn struct {
 	OriginalConn *net.TCPConn
 }
 
-func (conn *Conn) isActive() bool {
+func (conn *Conn) isAlive() bool {
 	return conn.Status != 0
 }

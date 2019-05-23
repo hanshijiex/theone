@@ -70,7 +70,7 @@ func (server *Server) Start() {
 				err := conn.Request.ReadFrom(conn.OriginalConn)
 				if err == io.EOF {
 					fmt.Println("conn is closed")
-					conn.OriginalConn.Close()
+					_ := conn.OriginalConn.Close()
 					conn.Status = 0
 					break
 				}
@@ -80,7 +80,7 @@ func (server *Server) Start() {
 					fmt.Println("call controller run err: ", err)
 				}
 
-				if conn.isActive() {
+				if conn.isAlive() {
 					err = conn.Response.WriteTo(conn.OriginalConn)
 				}
 			}

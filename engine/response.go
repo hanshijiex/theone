@@ -13,7 +13,6 @@ type Response struct {
 func (response *Response) WriteTo(w io.Writer) error {
 	len, err := w.Write(response.writeBuf[:response.writeLen])
 	if err != nil {
-		fmt.Println("write to conn err: ", err)
 		return err
 	}
 	fmt.Println("read len: ", len)
