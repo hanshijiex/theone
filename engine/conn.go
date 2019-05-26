@@ -3,6 +3,7 @@ package engine
 import "net"
 
 type Conn struct {
+	Id uint32
 	// 请求
 	Request *Request
 	// 响应

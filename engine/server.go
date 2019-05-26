@@ -19,6 +19,8 @@ type Server struct {
 	Status int8
 	// 控制器
 	Controller IController
+	// 连接管理器
+	Connmgr *Connmgr
 }
 
 func NewServer() *Server {
@@ -28,6 +30,10 @@ func NewServer() *Server {
 		Ip:        "127.0.0.1",
 		Port:      8082,
 		Status:    -1,
+		Connmgr: &Connmgr{
+			conns: make(map[uint32]*Conn),
+			count: 0,
+		},
 	}
 	return s
 }
@@ -63,6 +69,10 @@ func (server *Server) Start() {
 				writeLen: 0,
 			},
 			Status: 1,
+		}
+
+		if added := server.Connmgr.AddAConn(conn); added {
+			fmt.Println("")
 		}
 
 		go func() {
